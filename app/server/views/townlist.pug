@@ -1,0 +1,37 @@
+extends layout
+
+block content
+    include navbar
+    include modals/alert
+    include modals/confirm
+
+    #townlist
+        #table.card.card-body.bg-light
+            h1 TownList on Server [#{serverName}]
+            table(class="blueTable")
+                thead
+                    tr
+                        th Town Name
+                        th Town Size
+                        th Town Mayor
+
+                tbody
+                    for town in townList
+                        if town.isAdminTown == 1
+                            tr
+                                td(bgcolor="#f99a9a")
+                                    a(href='/towndetail/' + town.TownName) [ADM] #{town.TownName}
+                                td(bgcolor="#f99a9a") #{town.TownSize}
+                                td(bgcolor="#f99a9a") #{town.TownMayor}
+                        else
+                            tr
+                                td
+                                    a(href='/towndetail/' + town.TownName) #{town.TownName}
+                                td #{town.TownSize}
+                                td #{town.TownMayor}
+
+
+
+block scripts
+    script(src='/js/views/townlist.js')
+    script(src='/js/controllers/navbarController.js')

@@ -1,0 +1,22 @@
+{
+    "development": {
+        "server_name": "Developer Env",
+        "app_name": "MyTownWeb",
+        "node_port": 3000,
+        "session_secret": "oswU648tZCi3GAuQy7nMrgJvRhjqF5xfPmWSLVed",
+        "json_indentation": 4,
+        "mongo_db_server": "localhost",
+        "mongo_db_username": "localhost",
+        "mongo_db_password": "localhost",
+        "mongo_db_port": "27017",
+        "mongo_db_name": "mytownweb-login",
+        "mytown_db_server": "localhost",
+        "mytown_db_username": "town",
+        "mytown_db_password": "town",
+        "mytown_db_port": "3306",
+        "mytown_db_databasename": "mytown"
+    },
+    "production": {
+        "todo": "todo"
+    }
+}
