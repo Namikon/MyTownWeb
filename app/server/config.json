@@ -3,6 +3,7 @@
         "server_name": "Developer Env",
         "app_name": "MyTownWeb",
         "node_port": 3000,
+      "enable_user_signup": true,
         "session_secret": "oswU648tZCi3GAuQy7nMrgJvRhjqF5xfPmWSLVed",
         "json_indentation": 4,
         "mongo_db_server": "localhost",

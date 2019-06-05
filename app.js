@@ -6,16 +6,15 @@
  * More Info : https://github.com/braitsch/node-login
  * Copyright (c) 2013-2018 Stephen Braitsch
  **/
-
-var http = require('http');
-var express = require('express');
-var session = require('express-session');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var MongoStore = require('connect-mongo')(session);
+const http = require('http');
+const express = require('express');
+const session = require('express-session');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo')(session);
 
 const config = require('./app/server/modules/config.js');
-var app = express();
+const app = express();
 
 app.locals.pretty = true;
 app.set('port', gConfig.node_port);

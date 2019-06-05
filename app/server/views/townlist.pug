@@ -17,7 +17,7 @@ block content
 
                 tbody
                     for town in townList
-                        if town.isAdminTown == 1
+                        if town.isAdminTown === 1
                             tr
                                 td(bgcolor="#f99a9a")
                                     a(href='/towndetail/' + town.TownName) [ADM] #{town.TownName}

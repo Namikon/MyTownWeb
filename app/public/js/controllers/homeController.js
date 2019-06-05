@@ -1,7 +1,7 @@
 function HomeController()
 {
 // bind event listeners to button clicks //
-    var that = this;
+    const that = this;
 
 // confirm account deletion //
     $('#account-form-btn1').click(function(){$('.modal-confirm').modal('show')});
@@ -12,7 +12,7 @@ function HomeController()
     this.deleteAccount = function()
     {
         $('.modal-confirm').modal('hide');
-        var that = this;
+        const that = this;
         $.ajax({
             url: '/delete',
             type: 'POST',
@@ -33,4 +33,4 @@ HomeController.prototype.onUpdateSuccess = function()
     $('.modal-alert .modal-body p').html('Your account has been updated.');
     $('.modal-alert').modal('show');
     $('.modal-alert button').off('click');
-}
+};

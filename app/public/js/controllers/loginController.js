@@ -8,8 +8,8 @@ function LoginController()
         $('#get-credentials').modal('show');
     });
     $('#login .button-rememember-me').click(function(e) {
-        var span = $(this).find('span');
-        if (span.hasClass('glyphicon-unchecked')){
+        const span = $(this).find('span');
+        if (span.hasClass('glyphicon-unchecked')) {
             span.addClass('glyphicon-ok');
             span.removeClass('glyphicon-unchecked');
         }	else{

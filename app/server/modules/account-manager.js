@@ -2,7 +2,7 @@ const crypto 		= require('crypto');
 const moment 		= require('moment');
 const MongoClient 	= require('mongodb').MongoClient;
 
-var db, accounts;
+let db, accounts;
 MongoClient.connect(process.env.DB_URL, { useNewUrlParser: true }, function(e, client) {
     if (e){
         console.log(e);
@@ -15,7 +15,13 @@ MongoClient.connect(process.env.DB_URL, { useNewUrlParser: true }, function(e, c
     }
 });
 
-const guid = function(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});}
+const guid = function () {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : r & 0x3 | 0x8;
+        return v.toString(16);
+    });
+};
 
 /*
 	login validation methods
@@ -25,12 +31,12 @@ exports.autoLogin = function(user, pass, callback)
 {
     accounts.findOne({user:user}, function(e, o) {
         if (o){
-            o.pass == pass ? callback(o) : callback(null);
+            o.pass === pass ? callback(o) : callback(null);
         }	else{
             callback(null);
         }
     });
-}
+};
 
 exports.manualLogin = function(user, pass, callback)
 {
@@ -47,7 +53,7 @@ exports.manualLogin = function(user, pass, callback)
             });
         }
     });
-}
+};
 
 exports.generateLoginKey = function(user, ipAddress, callback)
 {
@@ -58,13 +64,13 @@ exports.generateLoginKey = function(user, ipAddress, callback)
         }}, {returnOriginal : false}, function(e, o){
         callback(cookie);
     });
-}
+};
 
 exports.validateLoginKey = function(cookie, ipAddress, callback)
 {
 // ensure the cookie maps to the user's last recorded ip address //
     accounts.findOne({cookie:cookie, ip:ipAddress}, callback);
-}
+};
 
 exports.generatePasswordKey = function(email, ipAddress, callback)
 {
@@ -79,13 +85,13 @@ exports.generatePasswordKey = function(email, ipAddress, callback)
             callback(e || 'account not found');
         }
     });
-}
+};
 
 exports.validatePasswordKey = function(passKey, ipAddress, callback)
 {
 // ensure the passKey maps to the user's last recorded ip address //
     accounts.findOne({passKey:passKey, ip:ipAddress}, callback);
-}
+};
 
 /*
 	record insertion, update & deletion methods
@@ -111,19 +117,19 @@ exports.addNewAccount = function(newData, callback)
             });
         }
     });
-}
+};
 
 exports.updateAccount = function(newData, callback)
 {
     let findOneAndUpdate = function(data){
-        var o = {
-            name : data.name,
-            email : data.email,
-        }
+        const o = {
+            name: data.name,
+            email: data.email,
+        };
         if (data.pass) o.pass = data.pass;
         accounts.findOneAndUpdate({_id:getObjectId(data.id)}, {$set:o}, {returnOriginal : false}, callback);
-    }
-    if (newData.pass == ''){
+    };
+    if (newData.pass === '') {
         findOneAndUpdate(newData);
     }	else {
         saltAndHash(newData.pass, function(hash){
@@ -131,7 +137,7 @@ exports.updateAccount = function(newData, callback)
             findOneAndUpdate(newData);
         });
     }
-}
+};
 
 exports.updatePassword = function(passKey, newPass, callback)
 {
@@ -139,7 +145,7 @@ exports.updatePassword = function(passKey, newPass, callback)
         newPass = hash;
         accounts.findOneAndUpdate({passKey:passKey}, {$set:{pass:newPass}, $unset:{passKey:''}}, {returnOriginal : false}, callback);
     });
-}
+};
 
 /*
 	account lookup methods
@@ -149,61 +155,59 @@ exports.getAllRecords = function(callback)
 {
     accounts.find().toArray(
         function(e, res) {
-            if (e) callback(e)
+            if (e) callback(e);
             else callback(null, res)
         });
-}
+};
 
 exports.deleteAccount = function(id, callback)
 {
     accounts.deleteOne({_id: getObjectId(id)}, callback);
-}
+};
 
 exports.deleteAllAccounts = function(callback)
 {
     accounts.deleteMany({}, callback);
-}
+};
 
 /*
 	private encryption & validation methods
 */
 
-var generateSalt = function()
-{
-    var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
-    var salt = '';
-    for (var i = 0; i < 10; i++) {
-        var p = Math.floor(Math.random() * set.length);
+const generateSalt = function () {
+    const set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
+    let salt = '';
+    for (let i = 0; i < 10; i++) {
+        const p = Math.floor(Math.random() * set.length);
         salt += set[p];
     }
     return salt;
-}
+};
 
-var md5 = function(str) {
+const md5 = function (str) {
     return crypto.createHash('md5').update(str).digest('hex');
-}
+};
 
 var saltAndHash = function(pass, callback)
 {
-    var salt = generateSalt();
+    const salt = generateSalt();
     callback(salt + md5(pass + salt));
-}
+};
 
 var validatePassword = function(plainPass, hashedPass, callback)
 {
-    var salt = hashedPass.substr(0, 10);
-    var validHash = salt + md5(plainPass + salt);
+    const salt = hashedPass.substr(0, 10);
+    const validHash = salt + md5(plainPass + salt);
     callback(null, hashedPass === validHash);
-}
+};
 
 var getObjectId = function(id)
 {
     return new require('mongodb').ObjectID(id);
-}
+};
 
-var listIndexes = function()
-{
-    accounts.indexes(null, function(e, indexes){
-        for (var i = 0; i < indexes.length; i++) console.log('index:', i, indexes[i]);
+const listIndexes = function () {
+    accounts.indexes(null, function (e, indexes) {
+        for (let i = 0; i < indexes.length; i++) console.log('index:', i, indexes[i]);
     });
-}
+};

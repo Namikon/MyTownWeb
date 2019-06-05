@@ -1,13 +1,13 @@
 $(document).ready(function(){
 
-    var lv = new LoginValidator();
-    var lc = new LoginController();
+    const lv = new LoginValidator();
+    const lc = new LoginController();
 
 // main login form //
 
     $('#login').ajaxForm({
         beforeSubmit : function(formData, jqForm, options){
-            if (lv.validateForm() == false){
+            if (lv.validateForm() === false) {
                 return false;
             } 	else{
                 // append 'remember-me' option to formData to write local cookie //
@@ -16,7 +16,7 @@ $(document).ready(function(){
             }
         },
         success	: function(responseText, status, xhr, $form){
-            if (status == 'success') window.location.href = '/home';
+            if (status === 'success') window.location.href = '/home';
         },
         error : function(e){
             lv.showLoginError('Login Failure', 'Please check your username and/or password');
@@ -25,8 +25,8 @@ $(document).ready(function(){
 
     $("input:text:visible:first").focus();
     $('#btn_remember').click(function(){
-        var span = $(this).find('span');
-        if (span.hasClass('fa-minus-square')){
+        const span = $(this).find('span');
+        if (span.hasClass('fa-minus-square')) {
             span.removeClass('fa-minus-square');
             span.addClass('fa-check-square');
         }	else{
@@ -37,7 +37,7 @@ $(document).ready(function(){
 
 // login retrieval form via email //
 
-    var ev = new EmailValidator();
+    const ev = new EmailValidator();
 
     $('#get-credentials-form').ajaxForm({
         url: '/lost-password',
@@ -56,7 +56,7 @@ $(document).ready(function(){
             ev.showEmailSuccess("A link to reset your password was emailed to you.");
         },
         error : function(e){
-            if (e.responseText == 'email-not-found'){
+            if (e.responseText === 'email-not-found') {
                 ev.showEmailAlert("Email not found. Are you sure you entered it correctly?");
             }	else{
                 $('#cancel').html('OK');

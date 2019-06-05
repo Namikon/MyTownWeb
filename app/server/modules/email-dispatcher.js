@@ -1,4 +1,4 @@
-var EM = {};
+const EM = {};
 module.exports = EM;
 
 EM.server = require("emailjs/email").server.connect(
@@ -18,12 +18,12 @@ EM.dispatchResetPasswordLink = function(account, callback)
         text         : 'something went wrong... :(',
         attachment   : EM.composeEmail(account)
     }, callback );
-}
+};
 
 EM.composeEmail = function(o)
 {
     let baseurl = process.env.NL_SITE_URL || 'http://localhost:3000';
-    var html = "<html><body>";
+    let html = "<html><body>";
     html += "Hi "+o.name+",<br><br>";
     html += "Your username is <b>"+o.user+"</b><br><br>";
     html += "<a href='"+baseurl+'/reset-password?key='+o.passKey+"'>Click here to reset your password</a><br><br>";
@@ -31,4 +31,4 @@ EM.composeEmail = function(o)
     html += "<a href='https://braitsch.io'>braitsch</a><br><br>";
     html += "</body></html>";
     return [{data:html, alternative:true}];
-}
+};

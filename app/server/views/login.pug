@@ -22,8 +22,9 @@ block content
             .btm-links
                 #forgot-password
                     a(href='#') Forgot Your Password?
-                #create-account
-                    a(href='/signup') Create An Account
+                if registerEnabled
+                    #create-account
+                        a(href='/signup') Create An Account
 
     include modals/alert
     include modals/lost-password

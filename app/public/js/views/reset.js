@@ -1,15 +1,11 @@
 $(document).ready(function(){
 
-    var rv = new ResetValidator();
-
+    const rv = new ResetValidator();
+    
     $('#set-password-form').ajaxForm({
         beforeSubmit : function(formData, jqForm, options){;
             rv.hideAlert();
-            if (rv.validatePassword($('#pass-tf').val()) == false){
-                return false;
-            } 	else{
-                return true;
-            }
+            return rv.validatePassword($('#pass-tf').val()) != false;
         },
         success	: function(responseText, status, xhr, $form){
             $('#set-password-submit').addClass('disabled');

@@ -1,5 +1,5 @@
 $(document).ready(function(){
 
-    var nc = new NavBarController();
-
+    const nc = new NavBarController();
+  
 });
