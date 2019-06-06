@@ -102,30 +102,34 @@ module.exports = function (app) {
             const connection = MYSQL.getMysqlConnection();
             connection.connect();
 
-            const townList = [];
-            let useQuery = SQLCONST.SQL_GET_TOWN_LIST_MEMBER;
+            let useQuery = "";
 
-            if (req.session.user.staff === 1)
+            if (req.session.user.staff == 1)
                 useQuery = SQLCONST.SQL_GET_TOWN_LIST_STAFF;
+            else
+                useQuery = SQLCONST.SQL_GET_TOWN_LIST_MEMBER;
 
-            connection.query(useQuery, function (err, rows) {
+            connection.query(useQuery, [req.session.user.playerUUID],function (err, rows) {
+                let townList = [];
                 if (err) {
                     console.log(err);
                     res.status(500).send(err);
                 } else {
                     // Loop check on each row
-                    for (let i = 0; i < rows.length; i++) {
-
+                    for (var row of rows)
+                    {
                         // Create an object to save current row's data
-                        const townDef = {
-                            'TownName': rows[i].townName,
-                            'TownSize': rows[i].numChunks,
-                            'isAdminTown': rows[i].isAdminTown,
-                            'TownMayor': rows[i].name
+                        let townDef = {
+                            'TownName': row.townName,
+                            'TownSize': row.numChunks,
+                            'isAdminTown': row.isAdminTown,
+                            'TownMayor': row.name
                         };
+
                         // Add object into array
                         townList.push(townDef);
                     }
+
                     res.render('townlist', {"townList": townList, "serverName": gConfig.server_name});
                 }
             });
