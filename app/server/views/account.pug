@@ -9,25 +9,36 @@ input(type='hidden', value= user._id)#userId
         h6#sub Please tell us a little about yourself.
         hr
         .form-group.row
-            label.col-sm-3.col-form-label.col-form-label-sm Name
-            .col-sm-9
-                input.form-control#name-tf(type='text', name='name', value= user.name)
-
-        .form-group.row
-            label.col-sm-3.col-form-label.col-form-label-sm Email
-            .col-sm-9
-                input.form-control#email-tf(type='email', name='email', value= user.email)
-
-        hr
-        .form-group.row
-            label.col-sm-3.col-form-label.col-form-label-sm Username
-            .col-sm-9
+            label.col-sm-4.col-form-label.col-form-label-sm Username
+            .col-sm-8
                 input.form-control#user-tf(type='text', name='user', value= user.user).disabled
 
+        .form-group.row
+            label.col-sm-4.col-form-label.col-form-label-sm Email
+            .col-sm-8
+                input.form-control#email-tf(type='email', name='email', value= user.email)
+
         .form-group.row.margin-zero
-            label.col-sm-3.col-form-label.col-form-label-sm Password
-            .col-sm-9
+            label.col-sm-4.col-form-label.col-form-label-sm Password
+            .col-sm-8
                 input.form-control#pass-tf(type='password', name='pass', value='')
+
+        hr
+
+        .form-group.row#uuid-row
+            label.col-sm-4.col-form-label.col-form-label-sm Linked UUID
+            .col-sm-8
+                input.form-control#uuid-tf(type='text', name='uuid', value= user.playerUUID).disabled
+
+        .form-group.row#token-row
+            label.col-sm-4.col-form-label.col-form-label-sm Account Token
+            .col-sm-8
+                input.form-control#token-tf(type='text', name='accountToken', value= user.accountToken).disabled
+        h6#verify-info
+            | Login to any Minecraft Server and type &nbsp;
+            b /mytownweb verify #{user.accountToken}
+            | &nbsp; to link your Minecraft UUID to this Account
+
 
         hr
         .form-buttons

@@ -173,6 +173,9 @@ exports.deleteAllAccounts = function(callback)
 /*
 	private encryption & validation methods
 */
+exports.createAccountSecret = function () {
+    return generateSalt();
+};
 
 const generateSalt = function () {
     const set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';

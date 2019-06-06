@@ -32,6 +32,8 @@ $(document).ready(function(){
     $('#account-form h2').text('Account Settings');
     $('#account-form #sub').text('Here are the current settings for your account.');
     $('#user-tf').attr('disabled', 'disabled');
+    $('#uuid-tf').attr('disabled', 'disabled');
+    $('#token-tf').attr('disabled', 'disabled');
     $('#account-form-btn1').html('Delete');
     $('#account-form-btn1').removeClass('btn-outline-dark');
     $('#account-form-btn1').addClass('btn-danger');

@@ -1,15 +1,15 @@
 {
-  "name": "node-login",
-  "version": "1.7.0",
-  "description": "A template for quickly building login systems on top of Node.js & MongoDb",
-  "author": "Stephen Braitsch <stephen@braitsch.io>",
+  "name": "mytown-web",
+  "version": "1.0.0",
+  "description": "A Web-Interface for the Minecraft-Mod MyTown2",
+  "author": "Namikon",
   "website": {
-    "url": "https://nodejs-login.herokuapp.com"
+    "url": "https://github.com/Namikon/MyTownWeb"
   },
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git@github.com:braitsch/node-login.git"
+    "url": "git@github.com:Namikon/MyTownWeb.git"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

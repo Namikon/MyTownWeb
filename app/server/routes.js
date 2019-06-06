@@ -145,11 +145,12 @@ module.exports = function (app) {
 
         app.post('/signup', function (req, res) {
             AM.addNewAccount({
-                name: req.body['name'],
                 email: req.body['email'],
                 user: req.body['user'],
                 pass: req.body['pass'],
                 staff: 0,
+                accountToken: AM.createAccountSecret(),
+                playerUUID: ""
             }, function (e) {
                 if (e) {
                     res.status(400).send(e);
