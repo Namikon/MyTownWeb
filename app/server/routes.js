@@ -167,7 +167,6 @@ module.exports = function (app) {
                     {
                         res.render('towndetail', {
                             "town": townInfoObject,
-                            title: 'Details for Town [' + req.params.townName + ']'
                         });
                     }
                     else
