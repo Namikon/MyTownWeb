@@ -13,8 +13,8 @@ block content
                 tbody
                     if town.isAdminTown
                         tr
-                            td This is an Admin-Town
-                            td &nbsp;
+                            td(colspan="2")
+                                b This is an Admin-Town
                     tr
                         td Town Name
                         td #{town.TownName}
@@ -33,9 +33,8 @@ block content
                         td Town Mayor
                         td #{town.townMayor}
                     tr
-                        td
+                        td(colspan="2")
                             a(href='/townflags/' + town.TownName) Show Town Flags
-                        td &nbsp;
 
 
 block scripts

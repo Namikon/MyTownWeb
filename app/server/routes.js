@@ -147,8 +147,94 @@ module.exports = function (app) {
             const connection = MYSQL.getMysqlConnection();
             connection.connect();
 
-            //connection.query(SQLCONST.SQL_GET_TOWN_DETAIL, [req.params.townName, req.params.townName, req.params.townName, req.params.townName, req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
             connection.query("CALL GetTownDetails(?, ?)", [req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                } else {
+                    let newRows = JSON.parse(JSON.stringify(rows));
+
+                    var townInfoObject = {
+                        'TownName': req.params.townName,
+                        'numTownBlocks': newRows[0][0].countBlocks,
+                        'spawnDimension': newRows[0][0].spawnDim,
+                        'totalTownMembers': newRows[0][0].countMembers,
+                        'townMayor': newRows[0][0].townMayor,
+                        'isAdminTown': newRows[0][0].isAdminTown
+                    };
+
+                    if (rows[0][0].isMember === 1)
+                    {
+                        res.render('towndetail', {
+                            "town": townInfoObject,
+                        });
+                    }
+                    else
+                        res.status(403).send("No such town or insufficient permissions");
+                }
+            });
+            connection.end();
+        }
+    });
+
+    app.get('/blocklist/:townName', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+            const connection = MYSQL.getMysqlConnection();
+            connection.connect();
+
+            let useQuery = "";
+
+            if (req.session.user.staff === "1")
+                useQuery = SQLCONST.SQL_GET_TOWN_BLOCKLIST_STAFF;
+            else
+                useQuery = SQLCONST.SQL_GET_TOWN_BLOCKLIST_MEMBER;
+
+            connection.query(useQuery, [req.params.townName, req.session.user.playerUUID],function (err, rows) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                } else {
+                    let townInfoObject = [];
+                    let townInfoObject_farClaims = [];
+                    for (var i = 0; i < rows.length; i++) {
+                        var bi = {
+                            'chunkX': rows[i].ChunkX,
+                            'chunkZ': rows[i].ChunkZ,
+                            'dimID': rows[i].DimID,
+                            'blockX1': rows[i].BlockX1,
+                            'blockX2': rows[i].BlockX2,
+                            'blockZ1': rows[i].BlockZ1,
+                            'blockZ2': rows[i].BlockZ2,
+                            'pricePaid': rows[i].pricePaid
+                        };
+
+                        if (rows[i].isFarClaim === 0)
+                            townInfoObject.push(bi);
+                        else
+                            townInfoObject_farClaims.push(bi);
+                    }
+                    res.render('blocklist', {
+                        "claimedChunks": townInfoObject,
+                        "claimedFarClaimChunks": townInfoObject_farClaims,
+                        "townName": req.params.townName
+                    });
+                }
+            });
+            connection.end();
+        }
+    });
+
+    // TODO: List as Members of a Town
+    app.get('/memberlist/:townName', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+            const connection = MYSQL.getMysqlConnection();
+            connection.connect();
+
+            connection.query("CALL GetTownMemberList(?, ?)", [req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
                 if (err) {
                     console.log(err);
                     res.status(500).send(err);
@@ -174,38 +260,43 @@ module.exports = function (app) {
                 }
             });
             connection.end();
-
-
-
-
-
         }
     });
 
-    // List all Blocks of a Town
-    app.get('/blocklist', function (req, res) {
+    // TODO: List all Flags of a Town
+    app.get('/townflags/:townName', function (req, res) {
         if (req.session.user == null) {
             res.redirect('/');
         } else {
+            const connection = MYSQL.getMysqlConnection();
+            connection.connect();
 
-        }
-    });
+            connection.query("CALL GetTownFLags(?, ?)", [req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                } else {
+                    let newRows = JSON.parse(JSON.stringify(rows));
 
-    // List as Members of a Town
-    app.get('/memberlist', function (req, res) {
-        if (req.session.user == null) {
-            res.redirect('/');
-        } else {
+                    var townInfoObject = {
+                        'TownName': req.params.townName,
+                        'numTownBlocks': newRows[0][0].countBlocks,
+                        'spawnDimension': newRows[0][0].spawnDim,
+                        'totalTownMembers': newRows[0][0].countMembers,
+                        'townMayor': newRows[0][0].townMayor
+                    };
 
-        }
-    });
-
-    // List all Flags of a Town
-    app.get('/townflags', function (req, res) {
-        if (req.session.user == null) {
-            res.redirect('/');
-        } else {
-
+                    if (rows[0][0].isMember === 1)
+                    {
+                        res.render('towndetail', {
+                            "town": townInfoObject,
+                        });
+                    }
+                    else
+                        res.status(403).send("No such town or insufficient permissions");
+                }
+            });
+            connection.end();
         }
     });
 

@@ -1,0 +1,66 @@
+extends layout
+
+block content
+    include navbar
+    include modals/alert
+    include modals/confirm
+
+    #townlist
+        #table.card.card-body.bg-light
+            h1 Claimed Chunks for Town [#{townName}]
+            h6
+                a(href="#farClaimList") FarClaims&nbsp;
+                | are listed below
+
+            table(class="blueTable")
+                thead
+                    tr
+                        th Dimension ID
+                        th Chunk X
+                        th Chunk Z
+                        th Block X Start
+                        th Block X End
+                        th Block Z Start
+                        th Block Z End
+                        th Claim Worth
+                tbody
+                    for cChunk in claimedChunks
+                        tr
+                            td #{cChunk.dimID}
+                            td #{cChunk.chunkX}
+                            td #{cChunk.chunkZ}
+                            td #{cChunk.blockX1}
+                            td #{cChunk.blockX2}
+                            td #{cChunk.blockZ1}
+                            td #{cChunk.blockZ2}
+                            td #{cChunk.pricePaid}
+
+            hr
+            h1 Far-Claims for Town [#{townName}]
+
+            table(class="blueTable")#farClaimList
+                thead
+                    tr
+                        th Dimension ID
+                        th Chunk X
+                        th Chunk Z
+                        th Block X Start
+                        th Block X End
+                        th Block Z Start
+                        th Block Z End
+                        th Block worth
+                tbody
+                    for cChunk in claimedFarClaimChunks
+                        tr
+                            td #{cChunk.dimID}
+                            td #{cChunk.chunkX}
+                            td #{cChunk.chunkZ}
+                            td #{cChunk.blockX1}
+                            td #{cChunk.blockX2}
+                            td #{cChunk.blockZ1}
+                            td #{cChunk.blockZ2}
+                            td #{cChunk.pricePaid}
+
+block scripts
+    script(src='/js/views/blocklist.js')
+    script(src='/js/controllers/navbarController.js')
