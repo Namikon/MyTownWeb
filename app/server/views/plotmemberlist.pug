@@ -7,6 +7,15 @@ block content
 
     #townlist
         #table.card.card-body.bg-light
+            p
+                a(href="/towns") Town List
+                | &nbsp;&raquo;&nbsp;
+                a(href="/towndetail/" + townName) Town: #{townName}
+                | &nbsp;&raquo;&nbsp;
+                a(href="/plotlist/" + townName) PlotList
+                | &nbsp;&raquo;&nbsp;
+                | Plot Members
+            hr
             h1 Plot Members for Plot [#{plotName}]
 
             table(class="blueTable")

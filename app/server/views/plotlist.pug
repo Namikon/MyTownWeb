@@ -7,6 +7,13 @@ block content
 
     #townlist
         #table.card.card-body.bg-light
+            p
+                a(href="/towns") Town List
+                | &nbsp;&raquo;&nbsp;
+                a(href="/towndetail/" + townName) Town: #{townName}
+                | &nbsp;&raquo;&nbsp;
+                | PlotList
+            hr
             h1 Plots in Town [#{townName}]
 
             table(class="blueTable")
@@ -27,9 +34,9 @@ block content
                         td #{tPlot.plotEnd}
                         td #{tPlot.memberCount}
                         td
-                            a(href='/plotflags/' + tPlot.plotID) Flags
+                            a(href='/plotflags/' + townName + '/' + tPlot.plotID) Flags
                             |&nbsp;|&nbsp;
-                            a(href='/plotmembers/' + tPlot.plotID) Member
+                            a(href='/plotmembers/' + townName + '/' + tPlot.plotID) Member
 
 block scripts
     script(src='/js/views/plotlist.js')

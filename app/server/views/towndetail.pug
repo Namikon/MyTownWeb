@@ -7,6 +7,11 @@ block content
 
     #townlist
         #table.card.card-body.bg-light
+            p
+                a(href="/towns") Town List
+                | &nbsp;&raquo;&nbsp;
+                | Town: #{town.TownName}
+            hr
             h1 Town-Details
 
             table(class="blueTable")

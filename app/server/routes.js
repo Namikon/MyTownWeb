@@ -349,7 +349,7 @@ module.exports = function (app) {
         }
     });
 
-    app.get('/plotflags/:plotID', function (req, res) {
+    app.get('/plotflags/:townName/:plotID', function (req, res) {
         if (req.session.user == null) {
             res.redirect('/');
         } else {
@@ -383,7 +383,8 @@ module.exports = function (app) {
 
                     res.render('plotflaglist', {
                         "flagList": townInfoObject,
-                        "plotName": tPlotName
+                        "plotName": tPlotName,
+                        "townName": req.params.townName
                     });
                 }
             });
@@ -391,7 +392,7 @@ module.exports = function (app) {
         }
     });
 
-    app.get('/plotmembers/:plotID', function (req, res) {
+    app.get('/plotmembers/:townName/:plotID', function (req, res) {
         if (req.session.user == null) {
             res.redirect('/');
         } else {
@@ -426,7 +427,8 @@ module.exports = function (app) {
 
                     res.render('plotmemberlist', {
                         "plotMemberList": townInfoObject,
-                        "plotName": tPlotName
+                        "plotName": tPlotName,
+                        "townName": req.params.townName
                     });
                 }
             });

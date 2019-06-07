@@ -7,6 +7,13 @@ block content
 
     #townlist
         #table.card.card-body.bg-light
+            p
+                a(href="/towns") Town List
+                | &nbsp;&raquo;&nbsp;
+                a(href="/towndetail/" + townName) Town: #{townName}
+                | &nbsp;&raquo;&nbsp;
+                | Claimed Chunks
+            hr
             h1 Claimed Chunks for Town [#{townName}]
             h6
                 a(href="#farClaimList") FarClaims&nbsp;
