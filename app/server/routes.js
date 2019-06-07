@@ -391,6 +391,49 @@ module.exports = function (app) {
         }
     });
 
+    app.get('/plotmembers/:plotID', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+            const connection = MYSQL.getMysqlConnection();
+            connection.connect();
+
+            let useQuery = "";
+
+            if (req.session.user.staff === "1")
+                useQuery = SQLCONST.SQL_GET_TOWN_PLOT_MEMBERLIST_STAFF;
+            else
+                useQuery = SQLCONST.SQL_GET_TOWN_PLOT_MEMBERLIST_MEMBER;
+
+            connection.query(useQuery, [req.params.townName, req.session.user.playerUUID],function (err, rows) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                } else {
+                    let townInfoObject = [];
+                    for (let i = 0; i < rows.length; i++) {
+                        let bi = {
+                            'memberName': rows[i].memberName,
+                            'isOwner': rows[i].isOwner
+                        };
+
+                        townInfoObject.push(bi);
+                    }
+
+                    let tPlotName = "";
+                    if (rows.length > 0)
+                        tPlotName = rows[0].plotName;
+
+                    res.render('plotmemberlist', {
+                        "plotMemberList": townInfoObject,
+                        "plotName": tPlotName
+                    });
+                }
+            });
+            connection.end();
+        }
+    });
+
     /*
      new accounts
      */

@@ -1,0 +1,25 @@
+extends layout
+
+block content
+    include navbar
+    include modals/alert
+    include modals/confirm
+
+    #townlist
+        #table.card.card-body.bg-light
+            h1 Plot Members for Plot [#{plotName}]
+
+            table(class="blueTable")
+                thead
+                    th Member
+                    th Owner of Plot
+                tbody
+                for tMember in plotMemberList
+                    tr
+                        td #{tMember.memberName}
+                        td #{tMember.isOwner}
+
+
+block scripts
+    script(src='/js/views/plotmemberlist.js')
+    script(src='/js/controllers/navbarController.js')

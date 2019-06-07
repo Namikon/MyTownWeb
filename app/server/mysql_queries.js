@@ -86,6 +86,24 @@ const SQL_GET_TOWN_PLOT_FLAGS_MEMBER = 'SELECT `tPlots`.`name` AS plotName, `tPl
     'AND `tPlots`.`townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?) ' +
     'ORDER BY flagName ASC';
 
+const SQL_GET_TOWN_PLOT_MEMBERLIST_STAFF = 'SELECT  ' +
+    '  `jP`.`name` AS plotName, ' +
+    '  `jR`.`name` AS memberName, ' +
+    '  IF(`jRTP`.`isOwner` = 1, "true", "false") AS isOwner ' +
+    'FROM `ResidentsToPlots` AS jRTP  ' +
+    'LEFT JOIN `Residents` AS jR ON (`jR`.`uuid` = `jRTP`.`resident`) ' +
+    'INNER JOIN `Plots` AS jP ON (`jRTP`.`plotID` = `jP`.`ID`) ' +
+    'WHERE `jP`.`ID` = 18';
+
+const SQL_GET_TOWN_PLOT_MEMBERLIST_MEMBER = 'SELECT ' +
+    '  `jP`.`name` AS plotName, ' +
+    '  `jR`.`name` AS memberName, ' +
+    '  IF(`jRTP`.`isOwner` = 1, "true", "false") AS isOwner ' +
+    'FROM `ResidentsToPlots` AS jRTP  ' +
+    'LEFT JOIN `Residents` AS jR ON (`jR`.`uuid` = `jRTP`.`resident`) ' +
+    'INNER JOIN `Plots` AS jP ON (`jRTP`.`plotID` = `jP`.`ID`) ' +
+    'WHERE `jP`.`ID` = ? ' +
+    'AND `jP`.`townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?) ';
 
 module.exports = {
     SQL_GET_TOWN_LIST_STAFF,
@@ -99,5 +117,7 @@ module.exports = {
     SQL_GET_TOWN_PLOTS_STAFF,
     SQL_GET_TOWN_PLOTS_MEMBER,
     SQL_GET_TOWN_PLOT_FLAGS_STAFF,
-    SQL_GET_TOWN_PLOT_FLAGS_MEMBER
+    SQL_GET_TOWN_PLOT_FLAGS_MEMBER,
+    SQL_GET_TOWN_PLOT_MEMBERLIST_STAFF,
+    SQL_GET_TOWN_PLOT_MEMBERLIST_MEMBER
 };
