@@ -23,6 +23,10 @@ block content
                             a(href='/blocklist/' + town.TownName) Claimed Chunks
                         td #{town.numTownBlocks}
                     tr
+                        td
+                            a(href='/plotlist/' + town.TownName) Town Plots
+                        td #{town.numTownPlots}
+                    tr
                         td Town Spawn (DimensionID, X, Y, Z)
                         td #{town.spawnDimension}
                     tr

@@ -56,6 +56,37 @@ const SQL_GET_TOWN_MEMBERLIST_MEMBER = 'SELECT `Residents`.`name` AS residentNam
 const SQL_GET_TOWN_FLAGS_STAFF = 'SELECT `name` AS flagName, `serializedValue` AS flagValue FROM `townflags` WHERE `townName` = ?';
 const SQL_GET_TOWN_FLAGS_MEMBER = 'SELECT `name` AS flagName, `serializedValue` AS flagValue FROM `townflags` WHERE `townName` = ? AND `townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?) ORDER BY flagName ASC';
 
+const SQL_GET_TOWN_PLOTS_STAFF = 'SELECT ' +
+    '  jPlot.ID, ' +
+    '  jPlot.name AS plotName, ' +
+    '  jPlot.dim AS plotDIM, ' +
+    '  CONCAT("X:", jPlot.x1," Y:" ,jPlot.y1," Z:" ,jPlot.z1) AS plotStart, ' +
+    '  CONCAT("X:", jPlot.x2," Y:" ,jPlot.y2," Z:" ,jPlot.z2) AS plotEnd, ' +
+    '  (SELECT COUNT(*) FROM `ResidentsToPlots` WHERE `ResidentsToPlots`.plotID = jPlot.ID) AS memberCount ' +
+    'FROM `Plots` AS jPlot ' +
+    'WHERE `townName` = ?';
+const SQL_GET_TOWN_PLOTS_MEMBER = 'SELECT ' +
+    '  jPlot.ID, ' +
+    '  jPlot.name AS plotName, ' +
+    '  jPlot.dim AS plotDIM, ' +
+    '  CONCAT("X:", jPlot.x1," Y:" ,jPlot.y1," Z:" ,jPlot.z1) AS plotStart, ' +
+    '  CONCAT("X:", jPlot.x2," Y:" ,jPlot.y2," Z:" ,jPlot.z2) AS plotEnd, ' +
+    '  (SELECT COUNT(*) FROM `ResidentsToPlots` WHERE `ResidentsToPlots`.plotID = jPlot.ID) AS memberCount ' +
+    'FROM `Plots` AS jPlot ' +
+    'WHERE `townName` = ? AND `townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?)';
+
+const SQL_GET_TOWN_PLOT_FLAGS_STAFF = 'SELECT `tPlots`.`name` AS plotName, `tPlotFlags`.`name` AS flagName, `serializedValue` AS flagValue FROM `PlotFlags` AS tPlotFlags ' +
+    'LEFT JOIN `Plots` AS tPlots ON (`tPlotFlags`.plotID = `tPlots`.ID) ' +
+    'WHERE `plotID` = ? ' +
+    'ORDER BY flagName ASC';
+
+const SQL_GET_TOWN_PLOT_FLAGS_MEMBER = 'SELECT `tPlots`.`name` AS plotName, `tPlotFlags`.`name` AS flagName, `serializedValue` AS flagValue FROM `PlotFlags` AS tPlotFlags ' +
+    'LEFT JOIN `Plots` AS tPlots ON (`tPlotFlags`.plotID = `tPlots`.ID) ' +
+    'WHERE `plotID` = ? ' +
+    'AND `tPlots`.`townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?) ' +
+    'ORDER BY flagName ASC';
+
+
 module.exports = {
     SQL_GET_TOWN_LIST_STAFF,
     SQL_GET_TOWN_LIST_MEMBER,
@@ -64,5 +95,9 @@ module.exports = {
     SQL_GET_TOWN_MEMBERLIST_STAFF,
     SQL_GET_TOWN_MEMBERLIST_MEMBER,
     SQL_GET_TOWN_FLAGS_STAFF,
-    SQL_GET_TOWN_FLAGS_MEMBER
+    SQL_GET_TOWN_FLAGS_MEMBER,
+    SQL_GET_TOWN_PLOTS_STAFF,
+    SQL_GET_TOWN_PLOTS_MEMBER,
+    SQL_GET_TOWN_PLOT_FLAGS_STAFF,
+    SQL_GET_TOWN_PLOT_FLAGS_MEMBER
 };

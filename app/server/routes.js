@@ -161,10 +161,11 @@ module.exports = function (app) {
                         'spawnDimension': newRows[0][0].spawnDim,
                         'totalTownMembers': newRows[0][0].countMembers,
                         'townMayor': newRows[0][0].townMayor,
-                        'isAdminTown': newRows[0][0].isAdminTown
+                        'isAdminTown': newRows[0][0].isAdminTown,
+                        'numTownPlots': newRows[0][0].countPlots
                     };
 
-                    if (rows[0][0].isMember === 1)
+                    if (rows[0][0].isMember === 1 || req.session.user.staff === "1")
                     {
                         res.render('towndetail', {
                             "town": townInfoObject,
@@ -299,6 +300,90 @@ module.exports = function (app) {
                     res.render('flaglist', {
                         "flagList": townInfoObject,
                         "townName": req.params.townName
+                    });
+                }
+            });
+            connection.end();
+        }
+    });
+
+    app.get('/plotlist/:townName', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+            const connection = MYSQL.getMysqlConnection();
+            connection.connect();
+
+            let useQuery = "";
+
+            if (req.session.user.staff === "1")
+                useQuery = SQLCONST.SQL_GET_TOWN_PLOTS_STAFF;
+            else
+                useQuery = SQLCONST.SQL_GET_TOWN_PLOTS_MEMBER;
+
+            connection.query(useQuery, [req.params.townName, req.session.user.playerUUID],function (err, rows) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                } else {
+                    let townInfoObject = [];
+                    for (let i = 0; i < rows.length; i++) {
+                        let bi = {
+                            'plotID': rows[i].ID,
+                            'plotName': rows[i].plotName,
+                            'plotDIM': rows[i].plotDIM,
+                            'plotStart': rows[i].plotStart,
+                            'plotEnd': rows[i].plotEnd,
+                            'memberCount': rows[i].memberCount
+                        };
+
+                        townInfoObject.push(bi);
+                    }
+                    res.render('plotlist', {
+                        "plotList": townInfoObject,
+                        "townName": req.params.townName
+                    });
+                }
+            });
+            connection.end();
+        }
+    });
+
+    app.get('/plotflags/:plotID', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+            const connection = MYSQL.getMysqlConnection();
+            connection.connect();
+
+            let useQuery = "";
+
+            if (req.session.user.staff === "1")
+                useQuery = SQLCONST.SQL_GET_TOWN_PLOT_FLAGS_STAFF;
+            else
+                useQuery = SQLCONST.SQL_GET_TOWN_PLOT_FLAGS_MEMBER;
+
+            connection.query(useQuery, [req.params.plotID, req.session.user.playerUUID],function (err, rows) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                } else {
+                    let townInfoObject = [];
+                    for (let i = 0; i < rows.length; i++) {
+                        let bi = {
+                            'flagName': rows[i].flagName,
+                            'flagValue': rows[i].flagValue
+                        };
+
+                        townInfoObject.push(bi);
+                    }
+                    let tPlotName = "";
+                    if (rows.length > 0)
+                        tPlotName = rows[0].plotName;
+
+                    res.render('plotflaglist', {
+                        "flagList": townInfoObject,
+                        "plotName": tPlotName
                     });
                 }
             });

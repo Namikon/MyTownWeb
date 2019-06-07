@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    include navbar
+    include modals/alert
+    include modals/confirm
+
+    #townlist
+        #table.card.card-body.bg-light
+            h1 Plots in Town [#{townName}]
+
+            table(class="blueTable")
+                thead
+                    th Plot Name
+                    th Dimension ID
+                    th Plot Start
+                    th Plot End
+                    th Plot Members
+                    th &nbsp;
+
+                tbody
+                for tPlot in plotList
+                    tr
+                        td #{tPlot.plotName}
+                        td #{tPlot.plotDIM}
+                        td #{tPlot.plotStart}
+                        td #{tPlot.plotEnd}
+                        td #{tPlot.memberCount}
+                        td
+                            a(href='/plotflags/' + tPlot.plotID) Flags
+                            |&nbsp;|&nbsp;
+                            a(href='/plotmembers/' + tPlot.plotID) Member
+
+block scripts
+    script(src='/js/views/plotlist.js')
+    script(src='/js/controllers/navbarController.js')

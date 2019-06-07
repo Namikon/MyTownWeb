@@ -1,0 +1,25 @@
+extends layout
+
+block content
+    include navbar
+    include modals/alert
+    include modals/confirm
+
+    #townlist
+        #table.card.card-body.bg-light
+            h1 Plot Flags for Plot [#{plotName}]
+
+            table(class="blueTable")
+                thead
+                    th Flag Name
+                    th Flag Value
+                tbody
+                for tFlag in flagList
+                    tr
+                        td #{tFlag.flagName}
+                        td #{tFlag.flagValue}
+
+
+block scripts
+    script(src='/js/views/plotflaglist.js')
+    script(src='/js/controllers/navbarController.js')
