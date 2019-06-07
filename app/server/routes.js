@@ -148,7 +148,7 @@ module.exports = function (app) {
             connection.connect();
 
             //connection.query(SQLCONST.SQL_GET_TOWN_DETAIL, [req.params.townName, req.params.townName, req.params.townName, req.params.townName, req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
-            connection.query("CALL Test(?, ?)", [req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
+            connection.query("CALL GetTownDetails(?, ?)", [req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
                 if (err) {
                     console.log(err);
                     res.status(500).send(err);
