@@ -8,6 +8,16 @@ block content
     #townlist
         #table.card.card-body.bg-light
             h1 TownList on Server [#{serverName}]
+            if isStaff === "1"
+                h6
+                    | Your Account is marked as&nbsp;
+                    b Staff
+                    | . Showing all Towns
+            else
+                if townList.length < 1
+                    h6 Whoops, seems you are not part of any town yet. (Or you haven't linked your Account)
+                else
+                    h6 You are Resident in the following Towns
             table(class="blueTable")
                 thead
                     tr

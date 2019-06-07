@@ -27,8 +27,8 @@ const SQL_GET_TOWN_LIST_MEMBER = 'SELECT ' +
     '    LEFT JOIN `ResidentsToTowns` ON (`Residents`.`uuid` = `ResidentsToTowns`.`resident`) ' +
     '    WHERE rank = \'Mayor\' ' +
     '  ) AS subQMayor ON (subQMayor.town = `Towns`.`name`) ' +
-    '  WHERE `Towns`.`isAdminTown` = 0 AND ' +
-    '  `Towns`.`name` IN ' +
+    //'  WHERE `Towns`.`isAdminTown` = 0 AND ' +
+    '  WHERE `Towns`.`name` IN ' +
     '  (' +
     ' SELECT DISTINCT(`ResidentsToTowns`.`town`) FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ? ' +
     '  )' +

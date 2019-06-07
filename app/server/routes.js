@@ -104,7 +104,7 @@ module.exports = function (app) {
 
             let useQuery = "";
 
-            if (req.session.user.staff == 1)
+            if (req.session.user.staff === "1")
                 useQuery = SQLCONST.SQL_GET_TOWN_LIST_STAFF;
             else
                 useQuery = SQLCONST.SQL_GET_TOWN_LIST_MEMBER;
@@ -130,7 +130,7 @@ module.exports = function (app) {
                         townList.push(townDef);
                     }
 
-                    res.render('townlist', {"townList": townList, "serverName": gConfig.server_name});
+                    res.render('townlist', {"townList": townList, "serverName": gConfig.server_name, "isStaff": req.session.user.staff});
                 }
             });
 
@@ -210,35 +210,6 @@ module.exports = function (app) {
             }
         })
     });
-
-    /*
-     view, delete & reset accounts
-     */
-    /*
-     app.get('/print', function(req, res) {
-     AM.getAllRecords( function(e, accounts){
-     res.render('print', { title : 'Account List', accts : accounts });
-     })
-     });
-
-     app.post('/delete', function(req, res){
-     AM.deleteAccount(req.session.user._id, function(e, obj){
-     if (!e){
-     res.clearCookie('login');
-     req.session.destroy(function(e){ res.status(200).send('ok'); });
-     }	else{
-     res.status(400).send('record not found');
-     }
-     });
-     });
-
-
-     app.get('/reset', function(req, res) {
-     AM.deleteAllAccounts(function(){
-     res.redirect('/print');
-     });
-     });
-     */
 
     app.get('*', function (req, res) {
         res.render('404', {title: 'Page Not Found'});
