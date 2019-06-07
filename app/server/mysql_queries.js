@@ -34,8 +34,8 @@ const SQL_GET_TOWN_LIST_MEMBER = 'SELECT ' +
     '  )' +
     '  GROUP BY `Towns`.`name` ORDER BY `Towns`.`name`';
 
-const SQL_GET_TOWN_BLOCKLIST_STAFF = 'SELECT `dim` AS DimID, `x` AS ChunkX, `z` AS ChunkZ, (`x`*16) AS BlockX1, (`x`*16)+16 AS BlockX2, (`z`*16) AS BlockZ1, (`z`*16)+16 AS BlockZ2, `isFarClaim`, `pricePaid` FROM `Blocks` WHERE `townName` LIKE ? AND `townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?)';
-const SQL_GET_TOWN_BLOCKLIST_MEMBER = 'SELECT `dim` AS DimID, `x` AS ChunkX, `z` AS ChunkZ, (`x`*16) AS BlockX1, (`x`*16)+16 AS BlockX2, (`z`*16) AS BlockZ1, (`z`*16)+16 AS BlockZ2, `isFarClaim`, `pricePaid` FROM `Blocks` WHERE `townName` LIKE ?';
+const SQL_GET_TOWN_BLOCKLIST_MEMBER = 'SELECT `dim` AS DimID, `x` AS ChunkX, `z` AS ChunkZ, (`x`*16) AS BlockX1, (`x`*16)+16 AS BlockX2, (`z`*16) AS BlockZ1, (`z`*16)+16 AS BlockZ2, `isFarClaim`, `pricePaid` FROM `Blocks` WHERE `townName` LIKE ? AND `townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?)';
+const SQL_GET_TOWN_BLOCKLIST_STAFF = 'SELECT `dim` AS DimID, `x` AS ChunkX, `z` AS ChunkZ, (`x`*16) AS BlockX1, (`x`*16)+16 AS BlockX2, (`z`*16) AS BlockZ1, (`z`*16)+16 AS BlockZ2, `isFarClaim`, `pricePaid` FROM `Blocks` WHERE `townName` LIKE ?';
 
 const SQL_GET_TOWN_MEMBERLIST_STAFF = 'SELECT `Residents`.`name` AS residentName, ' +
     'FROM_UNIXTIME(`Residents`.`joined`) AS joinedDate, ' +
