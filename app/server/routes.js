@@ -2,6 +2,7 @@ const AM = require('./modules/account-manager');
 const EM = require('./modules/email-dispatcher');
 const MYSQL = require('./modules/mysql-manager');
 const SQLCONST = require('./mysql_queries');
+var dateFormat = require('dateformat')
 
 module.exports = function (app) {
 
@@ -154,7 +155,7 @@ module.exports = function (app) {
                 } else {
                     let newRows = JSON.parse(JSON.stringify(rows));
 
-                    var townInfoObject = {
+                    let townInfoObject = {
                         'TownName': req.params.townName,
                         'numTownBlocks': newRows[0][0].countBlocks,
                         'spawnDimension': newRows[0][0].spawnDim,
@@ -198,8 +199,8 @@ module.exports = function (app) {
                 } else {
                     let townInfoObject = [];
                     let townInfoObject_farClaims = [];
-                    for (var i = 0; i < rows.length; i++) {
-                        var bi = {
+                    for (let i = 0; i < rows.length; i++) {
+                        let bi = {
                             'chunkX': rows[i].ChunkX,
                             'chunkZ': rows[i].ChunkZ,
                             'dimID': rows[i].DimID,
@@ -226,7 +227,6 @@ module.exports = function (app) {
         }
     });
 
-    // TODO: List as Members of a Town
     app.get('/memberlist/:townName', function (req, res) {
         if (req.session.user == null) {
             res.redirect('/');
@@ -234,36 +234,40 @@ module.exports = function (app) {
             const connection = MYSQL.getMysqlConnection();
             connection.connect();
 
-            connection.query("CALL GetTownMemberList(?, ?)", [req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
+            let useQuery = "";
+
+            if (req.session.user.staff === "1")
+                useQuery = SQLCONST.SQL_GET_TOWN_MEMBERLIST_STAFF;
+            else
+                useQuery = SQLCONST.SQL_GET_TOWN_MEMBERLIST_MEMBER;
+
+            connection.query(useQuery, [req.params.townName, req.session.user.playerUUID],function (err, rows) {
                 if (err) {
                     console.log(err);
                     res.status(500).send(err);
                 } else {
-                    let newRows = JSON.parse(JSON.stringify(rows));
+                    let townInfoObject = [];
+                    for (let i = 0; i < rows.length; i++) {
+                        let bi = {
+                            'residentName': rows[i].residentName,
+                            'joinedDate': dateFormat(rows[i].joinedDate, "UTC:dd.mm.yyyy HH:MM:ss"),
+                            'lastOnlineDate': dateFormat(rows[i].lastOnlineDate, "UTC:dd.mm.yyyy HH:MM:ss"),
+                            'daysOffline': rows[i].daysOffline,
+                            'townRank': rows[i].townRank
+                        };
 
-                    var townInfoObject = {
-                        'TownName': req.params.townName,
-                        'numTownBlocks': newRows[0][0].countBlocks,
-                        'spawnDimension': newRows[0][0].spawnDim,
-                        'totalTownMembers': newRows[0][0].countMembers,
-                        'townMayor': newRows[0][0].townMayor
-                    };
-
-                    if (rows[0][0].isMember === 1)
-                    {
-                        res.render('towndetail', {
-                            "town": townInfoObject,
-                        });
+                        townInfoObject.push(bi);
                     }
-                    else
-                        res.status(403).send("No such town or insufficient permissions");
+                    res.render('memberlist', {
+                        "memberList": townInfoObject,
+                        "townName": req.params.townName
+                    });
                 }
             });
             connection.end();
         }
     });
 
-    // TODO: List all Flags of a Town
     app.get('/townflags/:townName', function (req, res) {
         if (req.session.user == null) {
             res.redirect('/');
@@ -271,29 +275,31 @@ module.exports = function (app) {
             const connection = MYSQL.getMysqlConnection();
             connection.connect();
 
-            connection.query("CALL GetTownFLags(?, ?)", [req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
+            let useQuery = "";
+
+            if (req.session.user.staff === "1")
+                useQuery = SQLCONST.SQL_GET_TOWN_FLAGS_STAFF;
+            else
+                useQuery = SQLCONST.SQL_GET_TOWN_FLAGS_MEMBER;
+
+            connection.query(useQuery, [req.params.townName, req.session.user.playerUUID],function (err, rows) {
                 if (err) {
                     console.log(err);
                     res.status(500).send(err);
                 } else {
-                    let newRows = JSON.parse(JSON.stringify(rows));
+                    let townInfoObject = [];
+                    for (let i = 0; i < rows.length; i++) {
+                        let bi = {
+                            'flagName': rows[i].flagName,
+                            'flagValue': rows[i].flagValue
+                        };
 
-                    var townInfoObject = {
-                        'TownName': req.params.townName,
-                        'numTownBlocks': newRows[0][0].countBlocks,
-                        'spawnDimension': newRows[0][0].spawnDim,
-                        'totalTownMembers': newRows[0][0].countMembers,
-                        'townMayor': newRows[0][0].townMayor
-                    };
-
-                    if (rows[0][0].isMember === 1)
-                    {
-                        res.render('towndetail', {
-                            "town": townInfoObject,
-                        });
+                        townInfoObject.push(bi);
                     }
-                    else
-                        res.status(403).send("No such town or insufficient permissions");
+                    res.render('flaglist', {
+                        "flagList": townInfoObject,
+                        "townName": req.params.townName
+                    });
                 }
             });
             connection.end();

@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    include navbar
+    include modals/alert
+    include modals/confirm
+
+    #townlist
+        #table.card.card-body.bg-light
+            h1 Town Members of [#{townName}]
+
+            table(class="blueTable")
+                thead
+                    th Player Name
+                    th Joined
+                    th Last seen
+                    th Days offline
+                    th Rank
+                tbody
+                for tMember in memberList
+                    tr
+                        td #{tMember.residentName}
+                        td #{tMember.joinedDate}
+                        td #{tMember.lastOnlineDate}
+                        td #{tMember.daysOffline}
+                        td #{tMember.townRank}
+
+
+block scripts
+    script(src='/js/views/memberlist.js')
+    script(src='/js/controllers/navbarController.js')

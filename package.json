@@ -23,7 +23,8 @@
     "pug": "^2.0.3",
     "stylus": "^0.54.5",
     "mysql": "latest",
-    "lodash": "latest"
+    "lodash": "latest",
+    "dateformat": "latest"
   },
   "engines": {
     "node": "10.4.0"
