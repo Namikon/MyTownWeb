@@ -1,0 +1,43 @@
+extends layout
+
+block content
+    include navbar
+    include modals/alert
+    include modals/confirm
+
+    #townlist
+        #table.card.card-body.bg-light
+            h1 Details for Town [#{serverName}]
+
+            table(class="blueTable")
+                tbody
+                    if town.isAdminTown
+                        tr
+                            td This is an Admin-Town
+                            td &nbsp;
+                    tr
+                        td Town Name
+                        td #{town.TownName}
+                    tr
+                        td
+                            a(href='/blocklist/' + town.TownName) Claimed Chunks
+                        td #{town.numTownBlocks}
+                    tr
+                        td Town Spawn (DimensionID, X, Y, Z)
+                        td #{town.spawnDimension}
+                    tr
+                        td
+                            a(href='/memberlist/' + town.TownName) Total Members
+                        td #{town.totalTownMembers}
+                    tr
+                        td Town Mayor
+                        td #{town.townMayor}
+                    tr
+                        td
+                            a(href='/townflags/' + town.TownName) Show Town Flags
+                        td &nbsp;
+
+
+block scripts
+    script(src='/js/views/towndetail.js')
+    script(src='/js/controllers/navbarController.js')

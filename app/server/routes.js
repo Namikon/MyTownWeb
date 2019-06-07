@@ -95,6 +95,7 @@ module.exports = function (app) {
      Town & stuff
      */
 
+    // General Town-List
     app.get('/towns', function (req, res) {
         if (req.session.user == null) {
             res.redirect('/');
@@ -135,6 +136,77 @@ module.exports = function (app) {
             });
 
             connection.end();
+        }
+    });
+
+    // Details of a Town
+    app.get('/towndetail/:townName', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+            const connection = MYSQL.getMysqlConnection();
+            connection.connect();
+
+            //connection.query(SQLCONST.SQL_GET_TOWN_DETAIL, [req.params.townName, req.params.townName, req.params.townName, req.params.townName, req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
+            connection.query("CALL Test(?, ?)", [req.params.townName, req.session.user.playerUUID], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                } else {
+                    let newRows = JSON.parse(JSON.stringify(rows));
+
+                    var townInfoObject = {
+                        'TownName': req.params.townName,
+                        'numTownBlocks': newRows[0][0].countBlocks,
+                        'spawnDimension': newRows[0][0].spawnDim,
+                        'totalTownMembers': newRows[0][0].countMembers,
+                        'townMayor': newRows[0][0].townMayor
+                    };
+
+                    if (rows[0][0].isMember === 1)
+                    {
+                        res.render('towndetail', {
+                            "town": townInfoObject,
+                            title: 'Details for Town [' + req.params.townName + ']'
+                        });
+                    }
+                    else
+                        res.status(403).send("No such town or insufficient permissions");
+                }
+            });
+            connection.end();
+
+
+
+
+
+        }
+    });
+
+    // List all Blocks of a Town
+    app.get('/blocklist', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+
+        }
+    });
+
+    // List as Members of a Town
+    app.get('/memberlist', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+
+        }
+    });
+
+    // List all Flags of a Town
+    app.get('/townflags', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/');
+        } else {
+
         }
     });
 
