@@ -2,7 +2,7 @@ const AM = require('./modules/account-manager');
 const EM = require('./modules/email-dispatcher');
 const MYSQL = require('./modules/mysql-manager');
 const SQLCONST = require('./mysql_queries');
-var dateFormat = require('dateformat')
+var dateFormat = require('dateformat');
 
 module.exports = function (app) {
 
@@ -14,8 +14,8 @@ module.exports = function (app) {
         // check if the user has an auto login key saved in a cookie //
         if (req.cookies.login === undefined) {
             res.render('login', {
-                title: 'Hello - Please Login To Your Account',
-                registerEnabled: gConfig.enable_user_signup
+                registerEnabled: gConfig.enable_user_signup,
+                serverName: gConfig.server_name
             });
         } else {
             // attempt automatic login //
@@ -26,7 +26,10 @@ module.exports = function (app) {
                         res.redirect('/home');
                     });
                 } else {
-                    res.render('login', {title: 'Hello - Please Login To Your Account'});
+                    res.render('login', {
+                        registerEnabled: gConfig.enable_user_signup,
+                        serverName: gConfig.server_name
+                    });
                 }
             });
         }

@@ -12,7 +12,7 @@ const SQL_GET_TOWN_LIST_STAFF = 'SELECT ' +
     'LEFT JOIN `ResidentsToTowns` ON (`Residents`.`uuid` = `ResidentsToTowns`.`resident`) ' +
     'WHERE rank = \'Mayor\' ' +
     ') AS subQMayor ON (subQMayor.town = `Towns`.`name`) ' +
-    'GROUP BY `Towns`.`name` ORDER BY `Towns`.`name`';
+    'GROUP BY `Towns`.`name`, `Towns`.`isAdminTown`, subQMayor.name ORDER BY `Towns`.`name`';
 
 const SQL_GET_TOWN_LIST_MEMBER = 'SELECT ' +
     '    `Towns`.`name` AS townName, ' +
@@ -32,7 +32,7 @@ const SQL_GET_TOWN_LIST_MEMBER = 'SELECT ' +
     '  (' +
     ' SELECT DISTINCT(`ResidentsToTowns`.`town`) FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ? ' +
     '  )' +
-    '  GROUP BY `Towns`.`name` ORDER BY `Towns`.`name`';
+    '  GROUP BY `Towns`.`name`, `Towns`.`isAdminTown`, subQMayor.name ORDER BY `Towns`.`name`';
 
 const SQL_GET_TOWN_BLOCKLIST_MEMBER = 'SELECT `dim` AS DimID, `x` AS ChunkX, `z` AS ChunkZ, (`x`*16) AS BlockX1, (`x`*16)+16 AS BlockX2, (`z`*16) AS BlockZ1, (`z`*16)+16 AS BlockZ2, `isFarClaim`, `pricePaid` FROM `Blocks` WHERE `townName` LIKE ? AND `townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?)';
 const SQL_GET_TOWN_BLOCKLIST_STAFF = 'SELECT `dim` AS DimID, `x` AS ChunkX, `z` AS ChunkZ, (`x`*16) AS BlockX1, (`x`*16)+16 AS BlockX2, (`z`*16) AS BlockZ1, (`z`*16)+16 AS BlockZ2, `isFarClaim`, `pricePaid` FROM `Blocks` WHERE `townName` LIKE ?';
@@ -53,8 +53,8 @@ const SQL_GET_TOWN_MEMBERLIST_MEMBER = 'SELECT `Residents`.`name` AS residentNam
     'INNER JOIN `Residents` ON (`ResidentsToTowns`.`resident` = `Residents`.`uuid`)' +
     'WHERE `ResidentsToTowns`.`town` LIKE ? AND `ResidentsToTowns`.`town` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?)';
 
-const SQL_GET_TOWN_FLAGS_STAFF = 'SELECT `name` AS flagName, `serializedValue` AS flagValue FROM `townflags` WHERE `townName` = ?';
-const SQL_GET_TOWN_FLAGS_MEMBER = 'SELECT `name` AS flagName, `serializedValue` AS flagValue FROM `townflags` WHERE `townName` = ? AND `townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?) ORDER BY flagName ASC';
+const SQL_GET_TOWN_FLAGS_STAFF = 'SELECT `name` AS flagName, `serializedValue` AS flagValue FROM `TownFlags` WHERE `townName` = ?';
+const SQL_GET_TOWN_FLAGS_MEMBER = 'SELECT `name` AS flagName, `serializedValue` AS flagValue FROM `TownFlags` WHERE `townName` = ? AND `townName` IN (SELECT `ResidentsToTowns`.`town` FROM `ResidentsToTowns` WHERE `ResidentsToTowns`.`resident` = ?) ORDER BY flagName ASC';
 
 const SQL_GET_TOWN_PLOTS_STAFF = 'SELECT ' +
     '  jPlot.ID, ' +
